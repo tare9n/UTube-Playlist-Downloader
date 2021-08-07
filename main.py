@@ -48,7 +48,6 @@ def check_resume():
     link_list = txt_file.readlines()
     txt_file.close()
     while len (link_list) > 0:
-        print()
         while True:
             answer = input('You have an unfinished dl list. Do you want resume it? [y/n] ').lower()
             if answer == 'y':
