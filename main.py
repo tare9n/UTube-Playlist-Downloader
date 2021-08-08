@@ -22,7 +22,6 @@ def get_inspect(url):
                 str_of_vid_ids += 'https://www.youtube.com' + vid_id + '\n'
         my_file.write(str_of_vid_ids)
 
-
 def dl_video_list():
     current_dir = pathlib.Path().resolve()
     txt_file = open('vid_links.txt', 'r', encoding='utf-8')
@@ -42,7 +41,6 @@ def dl_video_list():
             txt_file.write(link)
         txt_file.close()
             
-
 def check_resume():
     txt_file = open('vid_links.txt', 'r+', encoding='utf-8')
     link_list = txt_file.readlines()
@@ -64,7 +62,6 @@ def check_resume():
         playlist_link = input('New playlist link: ')
         get_inspect(playlist_link)
         dl_video_list()
-
 
 def main():
     try:
