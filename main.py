@@ -13,7 +13,7 @@ def get_inspect(url):
     html1 = driver.page_source
     html2 = driver.execute_script("return document.documentElement.innerHTML;")
     vid_ids = re.findall('(/watch\?v=.{11})', html2)
-    with open('all_vid_links.txt', 'w', encoding='utf-8') as my_file:
+    with open('vid_links.txt', 'w', encoding='utf-8') as my_file:
         str_of_vid_ids = ''
         for vid_id in vid_ids[3:]:
             if vid_id in str_of_vid_ids:
@@ -25,7 +25,7 @@ def get_inspect(url):
 
 def dl_video_list():
     current_dir = pathlib.Path().resolve()
-    txt_file = open('all_vid_links.txt', 'r', encoding='utf-8')
+    txt_file = open('vid_links.txt', 'r', encoding='utf-8')
     link_list = txt_file.readlines()
     txt_file.close()
     download_list = link_list.copy()
@@ -37,14 +37,14 @@ def dl_video_list():
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             ydl.download([link])
         link_list.pop(link_list.index(link))
-        txt_file = open('all_vid_links.txt', 'w', encoding='utf-8')
+        txt_file = open('vid_links.txt', 'w', encoding='utf-8')
         for link in link_list:
             txt_file.write(link)
         txt_file.close()
             
 
 def check_resume():
-    txt_file = open('all_vid_links.txt', 'r+', encoding='utf-8')
+    txt_file = open('vid_links.txt', 'r+', encoding='utf-8')
     link_list = txt_file.readlines()
     txt_file.close()
     while len (link_list) > 0:
@@ -70,7 +70,7 @@ def main():
     try:
         check_resume()
     except FileNotFoundError:
-        txt_file = open('all_vid_links.txt', 'w', encoding='utf-8')
+        txt_file = open('vid_links.txt', 'w', encoding='utf-8')
         txt_file.close()
         check_resume()
 
