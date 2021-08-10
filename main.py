@@ -67,8 +67,7 @@ def main():
     try:
         check_resume()
     except FileNotFoundError:
-        txt_file = open('vid_links.txt', 'w', encoding='utf-8')
-        txt_file.close()
+        open('vid_links.txt', 'w', encoding='utf-8').close()
         check_resume()
 
 
