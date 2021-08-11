@@ -16,8 +16,8 @@ def check_url(url, dir_name='Utube Playlist Downloader'):
         elif is_video:
             if find_playlist_id:
                 print('This video is from a youtube playlist.')
-                answer = input('Do you want to download playlist [y] or just this video [n]? ').lower()
                 while True:
+                    answer = input('Do you want to download playlist [y] or just this video [n]? ').lower()
                     if answer == 'y':
                         playlist_url = 'https://www.youtube.com/playlist?' + find_playlist_id[0]
                         get_inspect(playlist_url, dir_name)
