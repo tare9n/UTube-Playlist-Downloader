@@ -40,22 +40,25 @@ def dl_video_list():
     download_list = link_list.copy()
     dir_name = 'Utube Playlist Downloader'
     for link in download_list:
-        if 'index=' in link:
-            index = re.search('index=(\d*)', link).groups()[0]
-            ydl_opts = {
-                'outtmpl': str(current_dir) + f'/{dir_name}/{index}- %(title)s.%(ext)s',
-            }
+        if 'youtube.com/watch?v=' in link:
+            if 'index=' in link:
+                index = re.search('index=(\d*)', link).groups()[0]
+                ydl_opts = {
+                    'outtmpl': str(current_dir) + f'/{dir_name}/{index}- %(title)s.%(ext)s',
+                }
+            else:
+                ydl_opts = {
+                    'outtmpl': str(current_dir) + f'/{dir_name}/%(title)s.%(ext)s',
+                }
+            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                ydl.download([link])
+            link_list.pop(link_list.index(link))
+            txt_file = open('vid_links.txt', 'w', encoding='utf-8')
+            for link in link_list:
+                txt_file.write(link)
+            txt_file.close()
         else:
-            ydl_opts = {
-                'outtmpl': str(current_dir) + f'/{dir_name}/%(title)s.%(ext)s',
-            }
-        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-            ydl.download([link])
-        link_list.pop(link_list.index(link))
-        txt_file = open('vid_links.txt', 'w', encoding='utf-8')
-        for link in link_list:
-            txt_file.write(link)
-        txt_file.close()
+            continue
             
 def check_resume():
     txt_file = open('vid_links.txt', 'r+', encoding='utf-8')
