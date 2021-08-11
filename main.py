@@ -6,11 +6,36 @@ import pathlib
 
 
 def check_url(url, dir_name='Utube Playlist Downloader'):
-    if 'youtube.com/playlist?' in url:
-        get_inspect(url, dir_name)
-    elif 'youtube.com/watch?v' in url:
-        with open('vid_links.txt', 'a', encoding='utf-8') as txt_file:
-            txt_file.write(f'\n{dir_name}\n' + url)
+    if 'youtube.com/' in url or 'youtu.be/' in url:
+        is_playlist = re.findall('(/playlist\?list=.{34})', url)
+        is_video = re.findall('(/watch\?v=.{11})', url) or re.findall('youtu\.be/(.{11})', url)
+        find_playlist_id = re.findall('(list=.{34})', url)
+        if is_playlist:
+            get_inspect(url, dir_name)
+            print('All videos in playlist added to download list.')
+        elif is_video:
+            if find_playlist_id:
+                print('This video is from a youtube playlist.')
+                answer = input('Do you want to download playlist [y] or just this video [n]? ').lower()
+                while True:
+                    if answer == 'y':
+                        playlist_url = 'https://www.youtube.com/playlist?' + find_playlist_id[0]
+                        get_inspect(playlist_url, dir_name)
+                        print('All videos in playlist added to download list.')
+                        break
+                    elif answer == 'n':
+                        video_url = 'https://www.youtube.com' + is_video[0] + '\n'
+                        with open('vid_links.txt', 'a', encoding='utf-8') as txt_file:
+                            txt_file.write(f'\n{dir_name}\n' + video_url)
+                        print('Video added to download list.')
+                        break
+                    else:
+                        print('Invalid input. Just enter "y" or "n".')
+            else:
+                with open('vid_links.txt', 'a', encoding='utf-8') as txt_file:
+                    txt_file.write(f'\n{dir_name}\n' + url)
+        else:
+            print('Not found. Maby your link is invalid.')
     else:
         print('Invalid Youtube Link.')
 
