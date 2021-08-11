@@ -11,6 +11,8 @@ def check_url(url, dir_name='Utube Playlist Downloader'):
     elif 'youtube.com/watch?v' in url:
         with open('vid_links.txt', 'a', encoding='utf-8') as txt_file:
             txt_file.write(f'\n{dir_name}\n' + url)
+    else:
+        print('Invalid Youtube Link.')
 
 def get_inspect(url, dir_name):
     driver = webdriver.Chrome("chromedriver.exe")
@@ -69,15 +71,15 @@ def check_resume():
     txt_file.close()
     while len (link_list) > 0:
         while True:
-            answer = input('You have an unfinished dl list. Do you want resume it? [y/n] ').lower()
+            answer = input('Start Download? [y/n] ').lower()
             if answer == 'y':
                 dl_video_list()
+                print('video(s) added to download list.')
                 break
             elif answer == 'n':
                 url = input('Video or playlist url: ')
                 dir_name = input('Enter a folder name to save videos:')
                 check_url(url, dir_name)
-                dl_video_list()
                 break
             else:
                 print('Invalid input')
