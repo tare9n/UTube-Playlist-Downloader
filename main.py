@@ -5,17 +5,27 @@ import youtube_dl
 import pathlib
 
 
+def check_url(url):
+    if 'youtube.com/playlist?' in url:
+        get_inspect(url)
+    elif 'youtube.com/watch?v' in url:
+        with open('vid_links.txt', 'a', encoding='utf-8') as txt_file:
+            txt_file.write('\n' + url)
+
 def get_inspect(url):
     driver = webdriver.Chrome("chromedriver.exe")
     driver.get(url)
     sleep(3)
-    driver.find_element_by_xpath('//*[@id="yDmH0d"]/c-wiz/div/div/div/div[2]/div[1]/div[4]/form/div[1]/div/button/span').click()
+    try:
+        driver.find_element_by_xpath('//*[@id="yDmH0d"]/c-wiz/div/div/div/div[2]/div[1]/div[4]/form/div[1]/div/button/span').click()
+    except:
+        pass
     html1 = driver.page_source
     html2 = driver.execute_script("return document.documentElement.innerHTML;")
-    vid_ids = re.findall('(/watch\?v=.{11})', html2)
+    vid_ids = re.findall('(/watch\?v=.*index=\d*)\"', html2)
     with open('vid_links.txt', 'w', encoding='utf-8') as my_file:
         str_of_vid_ids = ''
-        for vid_id in vid_ids[3:]:
+        for vid_id in vid_ids[2:-1]:
             if vid_id in str_of_vid_ids:
                 continue
             else:
@@ -29,10 +39,16 @@ def dl_video_list():
     txt_file.close()
     download_list = link_list.copy()
     dir_name = 'Utube Playlist Downloader'
-    for i, link in enumerate(download_list):
-        ydl_opts = {
-            'outtmpl': str(current_dir) + f'/{dir_name}/{i+1}- %(title)s.%(ext)s',
-        }
+    for link in download_list:
+        if 'index=' in link:
+            index = re.search('index=(\d*)', link).groups()[0]
+            ydl_opts = {
+                'outtmpl': str(current_dir) + f'/{dir_name}/{index}- %(title)s.%(ext)s',
+            }
+        else:
+            ydl_opts = {
+                'outtmpl': str(current_dir) + f'/{dir_name}/%(title)s.%(ext)s',
+            }
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             ydl.download([link])
         link_list.pop(link_list.index(link))
@@ -52,15 +68,15 @@ def check_resume():
                 dl_video_list()
                 break
             elif answer == 'n':
-                playlist_link = input('New playlist link: ')
-                get_inspect(playlist_link)
+                url = input('Video or playlist url: ')
+                check_url(url)
                 dl_video_list()
                 break
             else:
                 print('Invalid input')
     else:
-        playlist_link = input('New playlist link: ')
-        get_inspect(playlist_link)
+        url = input('Video or playlist url: ')
+        check_url(url)
         dl_video_list()
 
 def main():
