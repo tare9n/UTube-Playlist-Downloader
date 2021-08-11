@@ -42,8 +42,8 @@ def dl_video_list():
     dir_name = 'Utube Playlist Downloader'
     for link in download_list:
         if link != '\n':
-            if link[:-2].isalnum() and 'youtube.com/watch?v=' not in link:
-                dir_name = link
+            if 'youtube.com/watch?v=' not in link:
+                dir_name = link[:-1]
             elif 'youtube.com/watch?v=' in link:
                 if 'index=' in link:
                     index = re.search('index=(\d*)', link).groups()[0]
