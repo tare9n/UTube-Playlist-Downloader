@@ -5,12 +5,11 @@ import youtube_dl
 import pathlib
 
 
-def check_url(url, dir_name):
+def check_url(url, dir_name='Utube Playlist Downloader'):
     if 'youtube.com/playlist?' in url:
         get_inspect(url, dir_name)
     elif 'youtube.com/watch?v' in url:
         with open('vid_links.txt', 'a', encoding='utf-8') as txt_file:
-            dir_name = 'Utube Playlist Downloader'
             txt_file.write(f'\n{dir_name}\n' + url)
 
 def get_inspect(url, dir_name):
