@@ -94,20 +94,31 @@ def check_resume():
     txt_file = open('vid_links.txt', 'r+', encoding='utf-8')
     link_list = txt_file.readlines()
     txt_file.close()
+    all_str = ''
+    for link in link_list:
+        all_str += link
     while len (link_list) > 0:
-        while True:
-            answer = input('Start Download? [y/n] ').lower()
-            if answer == 'y':
-                dl_video_list()
-                print('video(s) added to download list.')
-                break
-            elif answer == 'n':
-                url = input('Video or playlist url: ')
-                dir_name = input('Enter a folder name to save videos:')
-                check_url(url, dir_name)
-                break
-            else:
-                print('Invalid input')
+        if 'https://www.youtube.com' in all_str:
+            while True:
+                answer = input('Start Download? [y/n] ').lower()
+                if answer == 'y':
+                    dl_video_list()
+                    print('video(s) added to download list.')
+                    break
+                elif answer == 'n':
+                    url = input('Video or playlist url: ')
+                    dir_name = input('Enter a folder name to save videos:')
+                    check_url(url, dir_name)
+                    break
+                else:
+                    print('Invalid input')
+        else:
+            with open('vid_links.txt', 'w', encoding='utf-8') as txt_file:
+                txt_file.write('')
+            url = input('Video or playlist url: ')
+            dir_name = input('Enter a folder name to save videos:')
+            check_url(url, dir_name)
+            
     else:
         url = input('Video or playlist url: ')
         dir_name = input('Enter a folder name to save videos:')
